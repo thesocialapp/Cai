@@ -38,7 +38,7 @@ export default function Home() {
 
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
-        socket.on('audioDetails', onAudioDetails)
+        socket.on('audioResponse', onAudioDetails)
         socket.on('transcriptionResults', onTranscribeComplete)
         
         return () => {
