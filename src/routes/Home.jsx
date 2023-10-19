@@ -1,24 +1,48 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import AudioRecorder from '../components/audio_recorder';
+import { FiRefreshCcw, FiCloudOff } from "react-icons/fi"
 import { socket } from "../socket"
+import msgpack from "msgpack-lite"
 
 
 export default function Home() {
-    // const [file, setFile] = useState(null)
+    
     const [connected, setIsConnected] = useState(false)
-    const chunkSize = 1024 * 1024; // 1MB
 
-    // Handle file audio file select
-    const receiveAudioFile = (file) => {
-        console.log('sending file to server', file)
-        sendBlobInChunks(file)
+
+    function receiveAudioFile(blob) {
+        // console.log('received audio blob')
+        // // Convert the blob to an ArrayBuffer
+        const fileReader = new FileReader()
+        fileReader.onload = () => {
+            try {
+                const arrayBuffer = fileReader.result
+
+
+
+                const str = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)))
+                const msgBuffer = msgpack.encode({ "audio": str, "name": 'test' })
+                const back = arrayBufferToBase64(msgBuffer)
+                console.log(back)
+                socket.emit('stream-audio', back)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fileReader.readAsArrayBuffer(blob)
+    }
+
+    function arrayBufferToBase64(arrayBuffer) {
+        const binaryArray = new Uint8Array(arrayBuffer);
+        const base64String = btoa(String.fromCharCode.apply(null, binaryArray));
+        return base64String;
     }
 
     useEffect(() => {
         socket.connect();
 
-        function onConnect() {
+        function  onConnect() {
             setIsConnected(true)
         }
 
@@ -36,11 +60,16 @@ export default function Home() {
             console.log(data)
         }
 
+        function onRtcResponse(data) {
+            console.log("We got a web rtc response", data)
+        }
+
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('audioResponse', onAudioDetails)
-        socket.on('transcriptionResults', onTranscribeComplete)
-        
+        socket.on('rtcResponse', onRtcResponse)
+        socket.on('transcriptionResult', onTranscribeComplete)
+
         return () => {
             socket.off('connect', onConnect)
             socket.off('disconnect', onDisconnect)
@@ -48,37 +77,8 @@ export default function Home() {
         }
     }, [])
 
-    function sendBlobInChunks(file) {
-        let offset = 0
 
-        function readChunk() {
-            const chunk = file.slice(offset, offset + chunkSize)
-            offset += chunkSize
 
-            if(chunk.size > 0) {
-                const reader = new FileReader()
-
-                reader.onload = (e) => {
-                    const chunkData = e.target.result
-                    print("chunk data", chunkData)
-
-                    socket.emit('audio-details', {
-                        "chunk": chunkData,
-                        "blob-name": new Date().toISOString(),
-                    })
-
-                    if(offset < file.size) {
-                        // read and send the next chunk
-                        readChunk()
-                    }
-                }
-
-                reader.readAsArrayBuffer(chunk)
-            }
-        }
-        readChunk()
-    }
-    
     return (
         <div className="home">
             <div className="h-full flex justify-center">
@@ -90,10 +90,18 @@ export default function Home() {
                                     connected ? (
                                         <AudioRecorder onCompleteRecording={receiveAudioFile} />
                                     ) : (
-                                        <div></div>
+                                        <div className='flex flex-col justify-center items-center'>
+                                            <FiCloudOff color='black' size={49} className='mb-5'/>
+                                            <h1 className='text-xl font-medium'>Not connected</h1>
+                                            <p className='mb-5 text-gray-600'>Sorry it seems we lost connection, this is on us. Please try reconnecting</p>
+                                            <button className='bg-black rounded-md px-4 py-2 text-white flex items-center' onClick={() => socket.connect()}>
+                                                <span><FiRefreshCcw color='white' size={49} className='pr-5'/></span>
+                                                    Retry connection
+                                                </button>
+                                        </div>
                                     )
                                 }
-                                
+
                             </div>
                         </div>
                     </div>

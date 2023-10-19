@@ -1,12 +1,14 @@
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { startRecording, saveRecording } from "../handlers/recorder-controls"
+
 
 const initialState = {
     isRecording: false,
     blobURL: null,
     blob: null,
     error: null,
+    loadedConverter: false,
     initRecording: false,
     mediaStream: null,
     mediaRecorder: null,
@@ -16,6 +18,7 @@ const initialState = {
 }
 
 export default function useRecorder() {
+    const ffmpegRef = useRef(new FFmpeg())
     const [recorderState, setRecorderState] = useState(initialState)
 
     // handle the recording timer
@@ -57,7 +60,7 @@ export default function useRecorder() {
             } else {
                 clearInterval(interval)
             }
-        }, 
+        },
     [])
 
     // handle the media recorder
@@ -73,7 +76,9 @@ export default function useRecorder() {
             setRecorderState(prevState => ({
                 ...prevState,
                 analyserCanvas: data,
-                mediaRecorder: new MediaRecorder(prevState.mediaStream),
+                mediaRecorder: new MediaRecorder(prevState.mediaStream, {
+                    mimeType: "audio/mp3",
+                }),
             }))
         }
     }, [recorderState.mediaStream])
@@ -85,11 +90,14 @@ export default function useRecorder() {
         if(recorder && recorder.state === "inactive") {
             recorder.start()
             recorder.ondataavailable = e => {
+                // console.log(e.data)
                 chunks.push(e.data)
             }
-            recorder.onstop = () => {
-                const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" })
+            recorder.onstop =  () => {
+                /// Set it as mp3
+                const blob = new Blob(chunks, { type: "audio/mp3" })
                 chunks = []
+                
                 setRecorderState(prevState => {
                     if(prevState.mediaRecorder) {
                         return {

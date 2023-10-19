@@ -1,17 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import { FiPause, FiStopCircle, FiMic } from "react-icons/fi";
+import React, { useEffect } from "react";
+import { FiStopCircle, FiMic } from "react-icons/fi";
 import useRecorder from "../hooks/useRecorder";
 
 export default function AudioRecorder({ onCompleteRecording }) {
     const { recorderState, ...handlers } = useRecorder()
-    const analyserCanvas = useRef(null)
-    const { audio, blob, blobURL } = recorderState
+    const { blobURL } = recorderState
 
     useEffect(() => {
         if(recorderState.blobURL) {
             onCompleteRecording(recorderState.blob)
         }
-    }, [recorderState])
+    }, [recorderState.mediaStream])
 
     return (
         <div className="flex flex-col justify-center items-center">
@@ -39,14 +38,11 @@ export default function AudioRecorder({ onCompleteRecording }) {
                             </button>
                         </div>
                     ) : (
-
                         <div className="w-auto h-auto bg-white rounded-full p-5 ml-1">
                             <button className="w-36 h-36 rounded-full bg-red-600 flex justify-center items-center text-white" onClick={handlers.saveRecording}>
                                 <FiStopCircle color="text-white" size={50} />
                             </button>
                         </div>
-
-
                     )
                 }
             </div>
