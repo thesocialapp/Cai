@@ -18,7 +18,6 @@ const initialState = {
 }
 
 export default function useRecorder() {
-    const ffmpegRef = useRef(new FFmpeg())
     const [recorderState, setRecorderState] = useState(initialState)
 
     // handle the recording timer
@@ -76,9 +75,7 @@ export default function useRecorder() {
             setRecorderState(prevState => ({
                 ...prevState,
                 analyserCanvas: data,
-                mediaRecorder: new MediaRecorder(prevState.mediaStream, {
-                    mimeType: "audio/mp3",
-                }),
+                mediaRecorder: new MediaRecorder(prevState.mediaStream, { mimeType: "audio/aac"  }),
             }))
         }
     }, [recorderState.mediaStream])
@@ -95,8 +92,10 @@ export default function useRecorder() {
             }
             recorder.onstop =  () => {
                 /// Set it as mp3
-                const blob = new Blob(chunks, { type: "audio/mp3" })
+                const blob = new Blob(chunks, { type: "audio/webm" })
                 chunks = []
+
+                console.log(blob)
                 
                 setRecorderState(prevState => {
                     if(prevState.mediaRecorder) {

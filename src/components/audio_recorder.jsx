@@ -20,7 +20,10 @@ export default function AudioRecorder({ onCompleteRecording }) {
 
                         <div className="w-auto h-auto bg-white rounded-md flex flex-col p-5 mb-5">
                             <div className="flex justify-center items-center">
-                                <audio src={blobURL} controls />
+                                <audio controls>
+                                    <source src={blobURL} type="audio/ogg"/>
+                                    <source src={blobURL} type="audio/webm"/>
+                                </audio>
                             </div>
                         </div>
                     </div>

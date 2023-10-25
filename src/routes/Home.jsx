@@ -7,25 +7,22 @@ import msgpack from "msgpack-lite"
 
 
 export default function Home() {
-    
+    const [audioData, setAudioData] = useState(null);
     const [connected, setIsConnected] = useState(false)
-
+    const [volume, setVolume] = useState(0.5);
 
     function receiveAudioFile(blob) {
         // console.log('received audio blob')
         // // Convert the blob to an ArrayBuffer
         const fileReader = new FileReader()
-        fileReader.onload = () => {
+        fileReader.onload = (event) => {
             try {
-                const arrayBuffer = fileReader.result
-
-
-
-                const str = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)))
-                const msgBuffer = msgpack.encode({ "audio": str, "name": 'test' })
-                const back = arrayBufferToBase64(msgBuffer)
-                console.log(back)
-                socket.emit('stream-audio', back)
+                console.log('sending audio file url', event.target.result)
+                const arrayBuffer = arrayBufferToBase64(event.target.result)
+                const msgBuffer = msgpack.encode({ "audio": arrayBuffer, "name": 'test' })
+                const msgBufferStr = arrayBufferToBase64(msgBuffer)
+                console.log('audio sample rate', blob.sampleRate)
+                socket.emit('stream-audio', msgBufferStr)
             } catch (error) {
                 console.log(error)
             }
@@ -39,10 +36,34 @@ export default function Home() {
         return base64String;
     }
 
+    function base64ToArrayBuffer(data) {
+        const binaryString = window.atob(data);
+        const bytes = new Uint8Array(binaryString.length);
+        return bytes.map((byte, i) => binaryString.charCodeAt(i));
+    }
+
+    useEffect(() => {
+        if(audioData) {
+            const audioContext = new AudioContext()
+            const audioBuffer = audioContext.createBuffer(1, audioData.length, audioContext.sampleRate)
+            audioBuffer.copyToChannel(new Float32Array(audioData), 0)
+            const audioSource = audioContext.createBufferSource()
+            audioSource.buffer = audioBuffer
+
+            // Create a gain node to control volume
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = volume; // Set the volume here
+
+            audioSource.connect(gainNode);
+            gainNode.connect(audioContext.destination)
+            // audioSource.start()
+        }
+    }, [audioData])
+
     useEffect(() => {
         socket.connect();
 
-        function  onConnect() {
+        function onConnect() {
             setIsConnected(true)
         }
 
@@ -64,9 +85,17 @@ export default function Home() {
             console.log("We got a web rtc response", data)
         }
 
+        function onAudioResponse(data) {
+            // Convert String from base64 to ArrayBuffer
+            const audioBuffer = base64ToArrayBuffer(data)
+            
+            setAudioData(audioBuffer)
+        }
+
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('audioResponse', onAudioDetails)
+        socket.on('audio_response', onAudioResponse)
         socket.on('rtcResponse', onRtcResponse)
         socket.on('transcriptionResult', onTranscribeComplete)
 
