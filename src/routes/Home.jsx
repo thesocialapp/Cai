@@ -4,6 +4,7 @@ import AudioRecorder from '../components/audio_recorder';
 import { FiRefreshCcw, FiCloudOff } from "react-icons/fi"
 import { socket } from "../socket"
 import msgpack from "msgpack-lite"
+import { Howl } from "howler"
 
 
 export default function Home() {
@@ -86,10 +87,30 @@ export default function Home() {
         }
 
         function onAudioResponse(data) {
-            // Convert String from base64 to ArrayBuffer
-            const audioBuffer = base64ToArrayBuffer(data)
-            
-            setAudioData(audioBuffer)
+            // Convert the base64 string to an ArrayBuffer
+            const arrayBuffer = base64ToArrayBuffer(data)
+            // Get audio blob
+            const audioBlob = new Blob([arrayBuffer])
+            // Get URL
+            const audioBlobUrl = URL.createObjectURL(audioBlob)
+            var response = new Howl(
+                {
+                    src: [audioBlobUrl],
+                    volume: volume,
+                    format: "ogg",
+                    onloaderror: function (error) {
+                        console.log("error loading audio", error)
+                    }
+                }
+            )
+
+            response.once('load', () => {
+                response.play()
+            })
+
+            response.on('end', () => {
+                console.log("Finished playing")
+            })
         }
 
         socket.on('connect', onConnect)

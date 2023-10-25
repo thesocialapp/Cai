@@ -75,7 +75,7 @@ export default function useRecorder() {
             setRecorderState(prevState => ({
                 ...prevState,
                 analyserCanvas: data,
-                mediaRecorder: new MediaRecorder(prevState.mediaStream, { mimeType: "audio/aac"  }),
+                mediaRecorder: new MediaRecorder(prevState.mediaStream),
             }))
         }
     }, [recorderState.mediaStream])
@@ -92,7 +92,7 @@ export default function useRecorder() {
             }
             recorder.onstop =  () => {
                 /// Set it as mp3
-                const blob = new Blob(chunks, { type: "audio/webm" })
+                const blob = new Blob(chunks, { type: "audio/ogg" })
                 chunks = []
 
                 console.log(blob)
