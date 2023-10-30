@@ -93,6 +93,7 @@ export default function Home() {
             const audioBlob = new Blob([arrayBuffer])
             // Get URL
             const audioBlobUrl = URL.createObjectURL(audioBlob)
+            
             var response = new Howl(
                 {
                     src: [audioBlobUrl],
