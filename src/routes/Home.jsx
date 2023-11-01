@@ -5,7 +5,7 @@ import { FiRefreshCcw, FiCloudOff } from "react-icons/fi"
 import { socket } from "../socket"
 import msgpack from "msgpack-lite"
 import { Howl } from "howler"
-
+import { easeIn, motion } from "framer-motion"
 
 export default function Home() {
     const [audioData, setAudioData] = useState(null);
@@ -44,7 +44,7 @@ export default function Home() {
     }
 
     useEffect(() => {
-        if(audioData) {
+        if (audioData) {
             const audioContext = new AudioContext()
             const audioBuffer = audioContext.createBuffer(1, audioData.length, audioContext.sampleRate)
             audioBuffer.copyToChannel(new Float32Array(audioData), 0)
@@ -93,7 +93,7 @@ export default function Home() {
             const audioBlob = new Blob([arrayBuffer])
             // Get URL
             const audioBlobUrl = URL.createObjectURL(audioBlob)
-            
+
             var response = new Howl(
                 {
                     src: [audioBlobUrl],
@@ -128,12 +128,11 @@ export default function Home() {
         }
     }, [])
 
-
-
     return (
         <div className="home">
             <div className="h-full flex justify-center">
-                <div className="container h-full">
+            
+                <div className="container record-container h-full">
                     <div className="h-full flex flex-col justify-center items-center">
                         <div className="flex flex-row">
                             <div className="ml-2 flex items-center">
@@ -142,13 +141,13 @@ export default function Home() {
                                         <AudioRecorder onCompleteRecording={receiveAudioFile} />
                                     ) : (
                                         <div className='flex flex-col justify-center items-center'>
-                                            <FiCloudOff color='black' size={49} className='mb-5'/>
+                                            <FiCloudOff color='black' size={49} className='mb-5' />
                                             <h1 className='text-xl font-medium'>Not connected</h1>
                                             <p className='mb-5 text-gray-600'>Sorry it seems we lost connection, this is on us. Please try reconnecting</p>
                                             <button className='bg-black rounded-md px-4 py-2 text-white flex items-center' onClick={() => socket.connect()}>
-                                                <span><FiRefreshCcw color='white' size={49} className='pr-5'/></span>
-                                                    Retry connection
-                                                </button>
+                                                <span><FiRefreshCcw color='white' size={49} className='pr-5' /></span>
+                                                Retry connection
+                                            </button>
                                         </div>
                                     )
                                 }
