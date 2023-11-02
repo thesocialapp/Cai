@@ -1,8 +1,18 @@
 .home {
     position: relative; /* Required for positioning pseudo-element */
-    
     height: 100vh;
     width: 100vw;
+}
+
+.home .circle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    background-color: red;
 }
 
 .home::after {

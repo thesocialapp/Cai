@@ -6,6 +6,7 @@ import { socket } from "../socket"
 import msgpack from "msgpack-lite"
 import { Howl } from "howler"
 import { easeIn, motion } from "framer-motion"
+import LineAnime from '../components/line_animations';
 
 export default function Home() {
     const [audioData, setAudioData] = useState(null);
@@ -128,15 +129,42 @@ export default function Home() {
         }
     }, [])
 
+    const numLines = 130;
+
     return (
         <div className="home">
-            <div className="h-full flex justify-center">
-            
-                <div className="container record-container h-full">
-                    <div className="h-full flex flex-col justify-center items-center">
-                        <div className="flex flex-row">
-                            <div className="ml-2 flex items-center">
-                                {
+            <div className="h-full flex justify-center items-center relative">
+                <div className="flex justify-center  items-center">
+                    <LineAnime numLines={numLines} duration={0.3} />
+                </div>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "44%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: "150px",
+                        height: "150px",
+                        backgroundColor: "red", // Change the button's background color
+                        borderRadius: "50%",
+                        border: "solid 10px #333", // Change the button's border
+                    }}
+                    className="flex justify-center items-center">
+                        {
+                            connected ?
+                                <AudioRecorder onCompleteRecording={receiveAudioFile} />
+                                :
+                                <div className='flex h-full w-full flex-col justify-center items-center'>
+                                    <FiCloudOff color='white' size={49}  />
+                                </div>
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+{/* {
                                     connected ? (
                                         <AudioRecorder onCompleteRecording={receiveAudioFile} />
                                     ) : (
@@ -150,14 +178,6 @@ export default function Home() {
                                             </button>
                                         </div>
                                     )
-                                }
+                                } */}
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
 

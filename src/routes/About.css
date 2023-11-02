@@ -8,7 +8,8 @@
     height: 100vh;
     width: 100vh;
     border-radius: 50vw;
-    border: solid 70px #6c6c6ca2;
+    border-style: solid;
+    border-color:  #6c6c6ca2;
 }
 
 
@@ -22,7 +23,7 @@
     padding: 2em;
     width: 180%;
     border-radius: 50vw;
-    border: solid 80px #13b22e3b;
+    border: solid 90px #13b22e3b;
 }
 
 .bg-circle__first::before {
