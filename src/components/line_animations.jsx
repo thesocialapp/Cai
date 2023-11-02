@@ -32,6 +32,7 @@ const LineAnime = (props) => {
                             top: 0,
                             transition: {
                                 duration: duration,
+                                
                                 ease: easeIn,
                                 repeat: Infinity,
                                 repeatType: "reverse",
