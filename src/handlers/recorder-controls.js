@@ -4,6 +4,7 @@ export async function startRecording(setRecorderState) {
         setRecorderState(prevState => ({
             ...prevState,
             initRecording: true,
+            isRecording: true,
             blob: null,
             blobURL: null,
             mediaStream: stream,

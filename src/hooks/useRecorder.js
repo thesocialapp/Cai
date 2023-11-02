@@ -101,6 +101,7 @@ export default function useRecorder() {
                     if(prevState.mediaRecorder) {
                         return {
                             ...initialState,
+                            isRecording: false,
                             blobURL: window.URL.createObjectURL(blob),
                             blob: blob,
                         }

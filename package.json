@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ffmpeg/util": "^0.12.1",
+    "@foobar404/wave": "^2.0.4",
     "buffer": "^6.0.3",
     "framer-motion": "^10.16.4",
     "howler": "^2.2.4",
