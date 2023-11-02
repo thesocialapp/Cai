@@ -47,19 +47,9 @@ export default function AudioRecorder({ onCompleteRecording }) {
 
     return (
         <>
-            <motion.div className="bg-circle" initial={{ borderWidth: borderWidth }} animate={controls}></motion.div>
-                <motion.div className='centered'>
-                    <div className="flex justify-center flex-center scale-150">
-                    <FiMic className='text-white' size={50}/>
-                    </div>
-                </motion.div>
-            {/* <div className="flex flex-col justify-center items-center">
-                <motion.div className="self-center"
-                    initial={{ borderWidth: borderWidth,  }}
-                    style={{ boxSizing: "border-box", borderRadius: "50%", padding: 10, borderColor: "#F87171" }}
-                    animate={controls}
-                >
-                    {
+           
+            <div className="flex flex-col justify-center items-center">
+                {
                         !recorderState.initRecording ? (
                             <div className="w-auto h-auto bg-white rounded-full p-5">
                                 <button className="w-36 h-36 rounded-full bg-red-600 flex justify-center items-center text-white" onClick={handlers.startRecording}>
@@ -74,8 +64,7 @@ export default function AudioRecorder({ onCompleteRecording }) {
                             </div>
                         )
                     }
-                </motion.div>
-            </div> */}
+            </div>
         </>
 
     )
