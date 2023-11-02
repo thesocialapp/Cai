@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import AudioRecorder from '../components/audio_recorder';
-import { FiRefreshCcw, FiCloudOff } from "react-icons/fi"
+import { FiRefreshCcw, FiCloudOff, FiAward } from "react-icons/fi"
 import { socket } from "../socket"
 import msgpack from "msgpack-lite"
 import { Howl } from "howler"
@@ -134,6 +134,16 @@ export default function Home() {
     return (
         <div className="home">
             <div className="h-full flex justify-center items-center relative">
+                <div className='absolute flex flex-col justify-center top-10 items-center' >
+                    <div className="flex flex-row">
+                        <FiAward color='black' size={48} className='mr-3'/>
+                        <span>
+                            <h2 className='text-2xl text-bold text-left'>SocialXAI</h2>
+                            <p className='text-center'>Have a chat with our interactive Voice Assistant</p>
+                        </span>
+                    </div>
+                    
+                </div>
                 <div className="flex justify-center  items-center">
                     <LineAnime numLines={numLines} duration={0.3} />
                 </div>
