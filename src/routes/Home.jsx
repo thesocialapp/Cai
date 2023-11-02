@@ -135,13 +135,13 @@ export default function Home() {
         <div className="home">
             <div className="h-full flex justify-center items-center relative">
                 <div className='absolute flex flex-col justify-center top-10 items-center' >
-                    <div className="flex flex-row">
-                        <FiAward color='black' size={48} className='mr-3'/>
+                    
+                        <FiAward color='black' size={48} className='mb-3'/>
                         <span>
-                            <h2 className='text-2xl text-bold text-left'>SocialXAI</h2>
-                            <p className='text-center'>Have a chat with our interactive Voice Assistant</p>
+                            <h2 className='text-2xl text-bold text-center'>SocialXAI</h2>
+                            <p className='text-center px-3'>Have a chat with our interactive Voice Assistant</p>
                         </span>
-                    </div>
+                    
                     
                 </div>
                 <div className="flex justify-center  items-center">
