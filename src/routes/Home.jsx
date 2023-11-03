@@ -68,14 +68,16 @@ export default function Home() {
     function onTranscribeComplete(data) {
         if (data == "**waiting**") {
             setLoading(true)
-            alert("Please wait for the transcription to complete")
         }
         setLoading(false)
         setTextData(prev => {
-            // Set a new set to prevent duplicates
-            const newSet = new Set(prev)
-            newSet.add(data)
-            return [...newSet]
+            
+                // Set a new set to prevent duplicates
+                const newSet = new Set(prev)
+
+                newSet.add(data == "**waiting**" ? "..." : data)
+                return [...newSet]
+            
         })
 
         console.log('received transcription results')
@@ -215,7 +217,7 @@ export default function Home() {
                                 <p>
                                     {textData.length === 0
                                         ? 'Speak to start a conversation'
-                                        : textData.join(' ')}
+                                        : textData.join('\n')}
                                 </p>
                             </div>
                         </div>
