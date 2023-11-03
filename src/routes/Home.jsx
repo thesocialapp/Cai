@@ -8,7 +8,7 @@ import { Howl } from "howler"
 import LineAnime from '../components/line_animations';
 
 export default function Home() {
-  
+
     const [textData, setTextData] = useState([])
     const [loading, setLoading] = useState(false)
     const [audioData, setAudioData] = useState(null);
@@ -77,7 +77,7 @@ export default function Home() {
             newSet.add(data)
             return [...newSet]
         })
-        
+
         console.log('received transcription results')
         console.log(data)
     }
@@ -150,7 +150,7 @@ export default function Home() {
         }
     }, [])
 
-    const numLines = 130;
+    const numLines = window.screen.width > 400 ? 70 : 20;
 
     return (
         <div className="home">
@@ -173,7 +173,7 @@ export default function Home() {
 
 
                 </div>
-                <div className="flex justify-center  items-center">
+                <div className="flex justify-center w-screen items-center">
                     <LineAnime numLines={numLines} duration={0.3} />
                 </div>
                 <div
@@ -198,33 +198,23 @@ export default function Home() {
                             </div>
                     }
                 </div>
-                {/* a textbox div at the bottom used to show text coming in as an array */}
-                <div className="absolute bottom-0 left-0 right-0 translate-x-1/2 rounded-lg shadow-lg transform-x-50 w-1/2 max-h-52 overflow-y-auto bg-white m-4">
-                    <div className="w-full h-full overflow-y-scroll">
-                        {
-                            <p className='p-2'>{textData.length == 0 ? 'Speak to start the conversation' : textData.join(' ')}</p>
-                        }
+                {/* Small text box to show information about set data joined in spaces positioned at the bottom and fullsceen when mobile and half screen wide in 
+                tablet and desktop*/}
+                <div className='absolute w-scree bottom-0 left-0 right-0 flex justify-center m-3'>
+                    <div className='sm:w-full md:w-1/2 p-2 rounded-lg shadow-lg bg-white'>
+                        <div className='w-full'>
+                            <p>
+                                {textData.length === 0
+                                    ? 'Speak to start a conversation'
+                                    : textData.join(' ')}
+                            </p>
+                        </div>
                     </div>
-                    </div>
+                </div>
+
             </div>
         </div>
     )
 }
-
-{/* {
-                                    connected ? (
-                                        <AudioRecorder onCompleteRecording={receiveAudioFile} />
-                                    ) : (
-                                        <div className='flex flex-col justify-center items-center'>
-                                            <FiCloudOff color='black' size={49} className='mb-5' />
-                                            <h1 className='text-xl font-medium'>Not connected</h1>
-                                            <p className='mb-5 text-gray-600'>Sorry it seems we lost connection, this is on us. Please try reconnecting</p>
-                                            <button className='bg-black rounded-md px-4 py-2 text-white flex items-center' onClick={() => socket.connect()}>
-                                                <span><FiRefreshCcw color='white' size={49} className='pr-5' /></span>
-                                                Retry connection
-                                            </button>
-                                        </div>
-                                    )
-                                } */}
 
 
