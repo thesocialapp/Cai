@@ -119,6 +119,7 @@ export default function Home() {
                     src: [audioBlobUrl],
                     volume: volume,
                     format: "ogg",
+                    html5: true,
                     onloaderror: function (error) {
                         console.log("error loading audio", error)
                     }
