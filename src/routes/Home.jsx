@@ -14,7 +14,7 @@ export default function Home() {
     const [audioData, setAudioData] = useState(null);
     const [audioChunks, setAudioChunks] = useState([])
     const [connected, setIsConnected] = useState(false)
-    const [volume, setVolume] = useState(0.7);
+    const [volume, setVolume] = useState(0.5);
 
     function receiveAudioFile(blob) {
         // console.log('received audio blob')
@@ -150,6 +150,10 @@ export default function Home() {
         }
     }, [])
 
+    const handleVolumeChange = (e) => {
+        setVolume(e.target.value);
+    };
+
     const numLines = window.screen.width > 400 ? 70 : 20;
 
     return (
@@ -202,13 +206,20 @@ export default function Home() {
                 tablet and desktop*/}
                 <div className='absolute w-scree bottom-0 left-0 right-0 flex justify-center m-3'>
                     <div className='sm:w-full md:w-1/2 p-2 rounded-lg shadow-lg bg-white'>
-                        <div className='w-full'>
-                            <p>
-                                {textData.length === 0
-                                    ? 'Speak to start a conversation'
-                                    : textData.join(' ')}
-                            </p>
+                        <div className="flex flex-col justify-end">
+                            <div className="w-40 m-1 self-start">
+                                <h4 className='text-xl text-bold'>Chats</h4>
+                            </div>
+                            <div className='w-full h-px bg-slate-200 my-1' />
+                            <div className='w-full'>
+                                <p>
+                                    {textData.length === 0
+                                        ? 'Speak to start a conversation'
+                                        : textData.join(' ')}
+                                </p>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
