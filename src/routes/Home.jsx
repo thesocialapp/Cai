@@ -114,25 +114,9 @@ export default function Home() {
             // Get URL
             const audioBlobUrl = URL.createObjectURL(audioBlob)
 
-            var response = new Howl(
-                {
-                    src: [audioBlobUrl],
-                    volume: volume,
-                    format: "ogg",
-                    html5: true,
-                    onloaderror: function (error) {
-                        console.log("error loading audio", error)
-                    }
-                }
-            )
-
-            response.once('load', () => {
-                response.play()
-            })
-
-            response.on('end', () => {
-                console.log("Finished playing")
-            })
+            var audio = new Audio(audioBlobUrl);
+            audio.play();
+            audio.volume = volume;
         }
 
         function audio() {
@@ -208,7 +192,7 @@ export default function Home() {
                 {/* Small text box to show information about set data joined in spaces positioned at the bottom and fullsceen when mobile and half screen wide in 
                 tablet and desktop*/}
                 <div className='absolute w-scree bottom-0 left-0 right-0 flex justify-center m-3'>
-                    <div className='sm:w-full md:w-1/2 p-2 rounded-lg shadow-lg bg-white'>
+                    <div className='sm:w-full md:w-1/2 max-h-52 overflow-y-auto p-2 rounded-lg shadow-lg bg-white'>
                         <div className="flex flex-col justify-end">
                             <div className="w-40 m-1 self-start">
                                 <h4 className='text-xl text-bold'>Chats</h4>
