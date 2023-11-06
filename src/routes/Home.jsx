@@ -119,10 +119,6 @@ export default function Home() {
             audio.volume = volume;
         }
 
-        function audio() {
-
-        }
-
         socket.on('connect', onConnect)
         socket.on('disconnect', onDisconnect)
         socket.on('audioResponse', onAudioDetails)
