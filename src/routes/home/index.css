@@ -1,0 +1,5 @@
+.home {
+    /* Set the background to the hushed blob svg from the assets */
+    background-image: url(../../assets/bbblurry.svg) center center no-repeat;
+    background-size: cover;
+}
